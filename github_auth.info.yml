@@ -1,0 +1,5 @@
+name: 'GitHub Auth'
+type: module
+description: 'GitHub Login Auth'
+core: 8.x
+package: 'Coders.cat'

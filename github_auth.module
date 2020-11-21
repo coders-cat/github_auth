@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Contains github_auth.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function github_auth_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the github_auth module.
+    case 'help.page.github_auth':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('GitHub Login Auth') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function github_auth_theme() {
+  return [
+    'github_auth' => [
+      'render element' => 'children',
+    ],
+  ];
+}

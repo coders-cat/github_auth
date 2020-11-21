@@ -1,0 +1,13 @@
+{
+    "name": "github_auth",
+    "type": "drupal-module",
+    "description": "GitHub Login Auth",
+    "keywords": [
+    ],
+    "homepage": "https://github.com/coders-cat/github_auth",
+    "minimum-stability": "dev",
+    "support": {
+        "issues": "https://github.com/coders-cat/github_auth/issues",
+        "source": "https://github.com/coders-cat/github_auth"
+    }
+}
