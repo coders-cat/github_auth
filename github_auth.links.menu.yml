@@ -1,0 +1,6 @@
+github_auth.oauth_settings_form:
+  title: 'OAuthSettingsForm'
+  route_name: github_auth.oauth_settings_form
+  description: 'GitHub OAuth settings'
+  parent: system.admin_config_system
+  weight: 99

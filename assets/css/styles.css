@@ -1,0 +1,31 @@
+.github_auth__separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.github_auth__separator::before, .github_auth__separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #000;
+}
+.github_auth__separator::before {
+  margin-right: .25em;
+}
+.github_auth__separator::after {
+  margin-left: .25em;
+}
+
+.github_auth__link {
+  text-align: center;
+  margin: 2em;
+}
+
+.github_auth__link a {
+  background-image: url("../images/GitHub-Mark-32px");
+  background-position: 7% center;
+  background-repeat: no-repeat;
+  padding: 1em 1em 1em 3.4em;
+  background-color: white;
+  color: black;
+  filter: invert();
+}

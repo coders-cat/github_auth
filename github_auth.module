@@ -4,7 +4,7 @@
  * @file
  * Contains github_auth.module.
  */
-
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -31,5 +31,34 @@ function github_auth_theme() {
     'github_auth' => [
       'render element' => 'children',
     ],
+  ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function github_auth_form_user_login_form_alter(&$form, FormStateInterface $form_state) {
+  $form['github_auth'] = [
+    '#type' => 'container',
+    '#suffix' => '<div class="github_auth__separator">' . t('Or create new account') . '</div>',
+    '#weight' => -1,
+    '#attributes' => [
+      'class' => ['github_auth__link'],
+    ],
+    'github_link' => [
+      '#type' => 'link',
+      '#title' => t('Login with GitHub'),
+      '#url' => Drupal\Core\Url::fromUri('https://github.com/login/oauth/authorize', [
+        'absolute' => TRUE,
+        'attributes' => [
+          'title' => t('Login with GitHub'),
+          'class' => ['github_auth__link'],
+        ],
+      ]),
+    ]
+  ];
+
+  $form['#attached'] = [
+    'library' => ['github_auth/github_auth']
   ];
 }
