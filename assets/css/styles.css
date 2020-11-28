@@ -24,8 +24,9 @@
   background-image: url("../images/GitHub-Mark-32px");
   background-position: 7% center;
   background-repeat: no-repeat;
+  border-radius: 1em;
   padding: 1em 1em 1em 3.4em;
-  background-color: white;
-  color: black;
+  background-color: #fff;
+  color: #000;
   filter: invert();
 }
