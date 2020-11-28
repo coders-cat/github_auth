@@ -6,6 +6,7 @@
  */
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -48,7 +49,7 @@ function github_auth_form_user_login_form_alter(&$form, FormStateInterface $form
     'github_link' => [
       '#type' => 'link',
       '#title' => t('Login with GitHub'),
-      '#url' => Drupal\Core\Url::fromUri('https://github.com/login/oauth/authorize', [
+      '#url' => Url::fromUri('https://github.com/login/oauth/authorize', [
         'absolute' => TRUE,
         'attributes' => [
           'title' => t('Login with GitHub'),
