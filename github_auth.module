@@ -50,11 +50,7 @@ function github_auth_form_user_login_form_alter(&$form, FormStateInterface $form
       '#type' => 'link',
       '#title' => t('Login with GitHub'),
       '#url' => Url::fromUri('https://github.com/login/oauth/authorize', [
-        'absolute' => TRUE,
-        'attributes' => [
-          'title' => t('Login with GitHub'),
-          'class' => ['github_auth__link'],
-        ],
+        'absolute' => TRUE
       ]),
     ]
   ];
