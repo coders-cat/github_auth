@@ -6,6 +6,8 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\github_auth\GitHubAuthService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class GitHubAuthController.
@@ -45,11 +47,29 @@ class GitHubAuthController extends ControllerBase {
    * @return string
    *   Return Hello string.
    */
-  public function callback() {
-    return [
-      '#type' => 'markup',
-      '#markup' => $this->t('Implement method: callback')
-    ];
+  public function callback(Request $request) {
+    $code = $request->query->get('code');
+    $state = $request->query->get('state');
+
+    $access_token = $this->githubAuthManager->getAccessToken($code, $state);
+    if (!$access_token) {
+      $this->messenger()->addError($this->t('Error getting GitHub access token'));
+      return new RedirectResponse('/user/login');
+    }
+
+    $githubUser = $this->githubAuthManager->getGitHubUser($access_token);
+    if (!$githubUser) {
+      $this->messenger()->addError($this->t('Error getting GitHub user data'));
+      return new RedirectResponse('/user/login');
+    }
+
+    $account = $this->githubAuthManager->loginOrRegister($githubUser);
+    if (!$account) {
+      $this->messenger()->addError($this->t('Error login with GitHub'));
+      return new RedirectResponse('/user/login');
+    }
+
+    return new RedirectResponse('/user');
   }
 
 }

@@ -8,7 +8,13 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\SessionManagerInterface;
 use Drupal\Core\Url;
 use Drupal\externalauth\ExternalAuthInterface;
+use Exception;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\RequestOptions;
 use Psr\Log\LoggerInterface;
+use function GuzzleHttp\json_decode;
+use function parse_str;
+use function watchdog_exception;
 
 /**
  * Class GitHubAuthService.
@@ -48,6 +54,13 @@ class GitHubAuthService {
   protected $currentUser;
 
   /**
+   * GuzzleHttp\ClientInterface definition.
+   *
+   * @var ClientInterface
+   */
+  protected $httpClient;
+
+  /**
    * Drupal\externalauth\ExternalAuthInterface definition.
    *
    * @var ExternalAuthInterface
@@ -63,6 +76,7 @@ class GitHubAuthService {
     SessionManagerInterface $session_manager,
     CsrfTokenGenerator $csrf_token_generator,
     AccountInterface $current_user,
+    ClientInterface $http_client,
     ExternalAuthInterface $externalauth_externalauth
   ) {
     $this->configFactory = $config_factory;
@@ -70,6 +84,7 @@ class GitHubAuthService {
     $this->sessionManager = $session_manager;
     $this->csrfTokenGenerator = $csrf_token_generator;
     $this->currentUser = $current_user;
+    $this->httpClient = $http_client;
     $this->externalAuth = $externalauth_externalauth;
   }
 
@@ -90,6 +105,71 @@ class GitHubAuthService {
           'state' => $this->csrfTokenGenerator->get('github_auth')
         ]
     ]);
+  }
+
+  public function verifyCsrfToken($token) {
+    return $this->csrfTokenGenerator->validate($token, 'github_auth');
+  }
+
+  public function getAccessToken($code, $state) {
+    $config = $this->configFactory->get('github_auth.oauthsettings');
+
+    $url = Url::fromUri('https://github.com/login/oauth/access_token', [
+        'absolute' => TRUE,
+        'query' => [
+          'client_id' => $config->get('client_id'),
+          'client_secret' => $config->get('client_secret'),
+          'code' => $code,
+          'state' => $state,
+          'state' => $this->csrfTokenGenerator->get('github_auth')
+        ]
+    ]);
+
+    try {
+      $response = $this->httpClient->request('POST', $url->toString());
+      if ($response->getStatusCode() === 200) {
+        $body = (string) $response->getBody();
+        $params = [];
+        parse_str($body, $params);
+        return $params['access_token'];
+      }
+    }
+    catch (Exception $ex) {
+      watchdog_exception('github_auth', $ex, 'Error get access token: @message | Code: @code | State: @state', [
+        '@message' => $ex->getMessage(),
+        '@code' => $code,
+        '@state' => $state
+      ]);
+    }
+
+    return '';
+  }
+
+  public function getGitHubUser($access_token) {
+    try {
+      $response = $this->httpClient->request('GET', 'https://api.github.com/user', [
+        RequestOptions::HEADERS => ['Authorization' => "token {$access_token}"]
+      ]);
+      if ($response->getStatusCode() === 200) {
+        $body = (string) $response->getBody();
+        return json_decode($body);
+      }
+    }
+    catch (Exception $ex) {
+      watchdog_exception('github_auth', $ex, 'Error get access token: @message | Code: @code | State: @state', [
+        '@message' => $ex->getMessage(),
+        '@code' => $code,
+        '@state' => $state
+      ]);
+    }
+
+    return null;
+  }
+
+  public function loginOrRegister($githubUser) {
+    return $this->externalAuth->loginRegister($githubUser->login, 'github_auth', [
+        'mail' => $githubUser->email
+      ]);
   }
 
 }
