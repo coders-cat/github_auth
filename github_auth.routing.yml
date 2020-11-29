@@ -7,3 +7,21 @@ github_auth.oauth_settings_form:
     _permission: 'access administration pages'
   options:
     _admin_route: TRUE
+
+github_auth.authorize:
+  path: '/user/login/github_auth'
+  defaults:
+    _controller: '\Drupal\github_auth\Controller\GitHubAuthController::authorize'
+    _title: 'Redirect to GitHub'
+  options:
+    no_cache: 'TRUE'
+  requirements:
+    _permission: 'access content'
+
+github_auth.callback:
+  path: '/user/login/github_auth/callback'
+  defaults:
+    _controller: '\Drupal\github_auth\Controller\GitHubAuthController::callback'
+    _title: 'GitHub return url callback'
+  requirements:
+    _permission: 'access content'
