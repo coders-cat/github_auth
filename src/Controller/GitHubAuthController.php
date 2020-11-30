@@ -57,9 +57,14 @@ class GitHubAuthController extends ControllerBase {
       return new RedirectResponse('/user/login');
     }
 
-    $githubUser = $this->githubAuthManager->getGitHubUser($access_token);
+    $githubUser = $this->githubAuthManager->getGitHubUserWithEmail($access_token);
     if (!$githubUser) {
       $this->messenger()->addError($this->t('Error getting GitHub user data'));
+      return new RedirectResponse('/user/login');
+    }
+
+    if (!$githubUser->email) {
+      $this->messenger()->addError($this->t('GitHub account does not have any primary verified email.'));
       return new RedirectResponse('/user/login');
     }
 

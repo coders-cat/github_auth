@@ -133,6 +133,12 @@ class GitHubAuthService {
         parse_str($body, $params);
         return $params['access_token'];
       }
+      else {
+        $this->logger->debug('getAccessToken response: @status - @phrase', [
+          '@status' => $response->getStatusCode(),
+          '@phrase' => $response->getReasonPhrase()
+        ]);
+      }
     }
     catch (Exception $ex) {
       watchdog_exception('github_auth', $ex, 'Error get access token: @message | Code: @code | State: @state', [
@@ -156,20 +162,54 @@ class GitHubAuthService {
       }
     }
     catch (Exception $ex) {
-      watchdog_exception('github_auth', $ex, 'Error get access token: @message | Code: @code | State: @state', [
+      watchdog_exception('github_auth', $ex, 'Error get access token: @message | Access token: @access_token', [
         '@message' => $ex->getMessage(),
-        '@code' => $code,
-        '@state' => $state
+        '@access_token' => $access_token
       ]);
     }
 
     return null;
   }
 
+  public function getGitHubUserEmails($access_token) {
+    try {
+      $response = $this->httpClient->request('GET', 'https://api.github.com/user/emails', [
+        RequestOptions::HEADERS => ['Authorization' => "token {$access_token}"]
+      ]);
+      if ($response->getStatusCode() === 200) {
+        $body = (string) $response->getBody();
+        return json_decode($body);
+      }
+    }
+    catch (Exception $ex) {
+      watchdog_exception('github_auth', $ex, 'Error get access token: @message | Access token: @access_token', [
+        '@message' => $ex->getMessage(),
+        '@access_token' => $access_token
+      ]);
+    }
+
+    return null;
+  }
+
+  public function getGitHubUserWithEmail($access_token) {
+    $githubUser = $this->getGitHubUser($access_token);
+    if ($githubUser) {
+      $emails = $this->getGitHubUserEmails($access_token);
+      foreach ($emails as $entry) {
+        if ($entry->primary && $entry->verified) {
+          $githubUser->email = $entry->email;
+          break;
+        }
+      }
+    }
+    return $githubUser;
+  }
+
   public function loginOrRegister($githubUser) {
     return $this->externalAuth->loginRegister($githubUser->login, 'github_auth', [
+        'name' => $githubUser->login,
         'mail' => $githubUser->email
-      ]);
+    ]);
   }
 
 }
