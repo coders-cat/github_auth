@@ -6,9 +6,9 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class OAuthSettingsForm.
+ * Class GitHubAuthSettingsForm.
  */
-class OAuthSettingsForm extends ConfigFormBase {
+class GitHubAuthSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}
