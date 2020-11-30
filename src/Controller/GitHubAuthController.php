@@ -68,6 +68,28 @@ class GitHubAuthController extends ControllerBase {
       return new RedirectResponse('/user/login');
     }
 
+    // Verifiquem que no existeixi cap usuari amb el mateix login o email...
+    // @TODO Merge accounts
+    if (!$this->githubAuthManager->externalUserExist($githubUser)) {
+      $userStorage = $this->entityTypeManager()->getStorage('user');
+      $userByName = $userStorage->loadByProperties(['name' => $githubUser->login]);
+      if ($userByName) {
+        $this->messenger()->addError($this->t('The username %value is already taken.', [
+            '%value' => $githubUser->login
+        ]));
+      }
+      $userByEmail = $userStorage->loadByProperties(['mail' => $githubUser->email]);
+      if ($userByEmail) {
+        $this->messenger()->addError($this->t('The email address %value is already taken.', [
+            '%value' => $githubUser->email
+        ]));
+      }
+      if ($userByName || $userByEmail) {
+        $this->messenger()->addError($this->t('Merge accounts are not supported yet.'));
+        return new RedirectResponse('/user/login');
+      }
+    }
+
     $account = $this->githubAuthManager->loginOrRegister($githubUser);
     if (!$account) {
       $this->messenger()->addError($this->t('Error login with GitHub'));

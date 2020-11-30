@@ -206,10 +206,18 @@ class GitHubAuthService {
   }
 
   public function loginOrRegister($githubUser) {
+    $account = $this->externalAuth->login($githubUser->login, 'github_auth');
+    if (!$account) {
+
+    }
     return $this->externalAuth->loginRegister($githubUser->login, 'github_auth', [
         'name' => $githubUser->login,
         'mail' => $githubUser->email
     ]);
+  }
+
+  public function externalUserExist($githubUser) {
+    return $this->externalAuth->load($githubUser->login, 'github_auth');
   }
 
 }
