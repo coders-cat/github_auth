@@ -4,6 +4,7 @@ namespace Drupal\github_auth\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\TrustedRedirectResponse;
+use Drupal\Core\Url;
 use Drupal\github_auth\GitHubAuthService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -80,9 +81,9 @@ class GitHubAuthController extends ControllerBase {
       }
       $userByEmail = $userStorage->loadByProperties(['mail' => $githubUser->email]);
       if ($userByEmail) {
-        $this->messenger()->addError($this->t('The email address %value is already taken.', [
-            '%value' => $githubUser->email
-        ]));
+        $this->githubAuthManager->keepGitHubUser($githubUser);
+        $merge_confirm_url = Url::fromRoute('github_auth.confirm_merge_accounts');
+        return new RedirectResponse($merge_confirm_url->toString());
       }
       if ($userByName || $userByEmail) {
         $this->messenger()->addError($this->t('Merge accounts are not supported yet.'));

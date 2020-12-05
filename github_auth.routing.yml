@@ -25,3 +25,11 @@ github_auth.callback:
     _title: 'GitHub return url callback'
   requirements:
     _permission: 'access content'
+
+github_auth.confirm_merge_accounts:
+  path: '/user/login/github_auth/merge'
+  defaults:
+    _form: '\Drupal\github_auth\Form\MergeAccountsConfigForm'
+    _title: 'Merge Accounts'
+  requirements:
+    _access: 'TRUE'

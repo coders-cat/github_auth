@@ -4,16 +4,21 @@ namespace Drupal\github_auth;
 
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\SessionManagerInterface;
+use Drupal\Core\TempStore\PrivateTempStore;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Url;
 use Drupal\externalauth\ExternalAuthInterface;
 use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
 use Psr\Log\LoggerInterface;
+use function count;
 use function GuzzleHttp\json_decode;
 use function parse_str;
+use function reset;
 use function watchdog_exception;
 
 /**
@@ -35,6 +40,13 @@ class GitHubAuthService {
   protected $logger;
 
   /**
+   * Drupal\Core\Entity\EntityTypeManagerInterface definition.
+   *
+   * @var EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    *
    * @var SessionManagerInterface
    */
@@ -52,6 +64,12 @@ class GitHubAuthService {
    * @var AccountInterface
    */
   protected $currentUser;
+
+  /**
+   *
+   * @var PrivateTempStore
+   */
+  protected $tempStore;
 
   /**
    * GuzzleHttp\ClientInterface definition.
@@ -73,17 +91,21 @@ class GitHubAuthService {
   public function __construct(
     ConfigFactoryInterface $config_factory,
     LoggerInterface $logger,
+    EntityTypeManagerInterface $entity_type_manager,
     SessionManagerInterface $session_manager,
     CsrfTokenGenerator $csrf_token_generator,
     AccountInterface $current_user,
+    PrivateTempStoreFactory $temp_store_factory,
     ClientInterface $http_client,
     ExternalAuthInterface $externalauth_externalauth
   ) {
     $this->configFactory = $config_factory;
     $this->logger = $logger;
+    $this->entityTypeManager = $entity_type_manager;
     $this->sessionManager = $session_manager;
     $this->csrfTokenGenerator = $csrf_token_generator;
     $this->currentUser = $current_user;
+    $this->tempStore = $temp_store_factory->get('github_auth');
     $this->httpClient = $http_client;
     $this->externalAuth = $externalauth_externalauth;
   }
@@ -205,11 +227,35 @@ class GitHubAuthService {
     return $githubUser;
   }
 
-  public function loginOrRegister($githubUser) {
-    $account = $this->externalAuth->login($githubUser->login, 'github_auth');
-    if (!$account) {
+  public function keepGitHubUser($githubUser) {
+    $this->tempStore->set('githubuser', $githubUser);
+  }
 
+  public function getKeepedGitHubUser() {
+    return $this->tempStore->get('githubuser');
+  }
+
+  public function mergeAccountsByMailAndLogin() {
+    $githubUser = $this->getKeepedGitHubUser();
+    if (!$githubUser) {
+      $this->logger->error('Trying to merge account by mail without github user');
+      return false;
     }
+
+    $users = $this->entityTypeManager->getStorage('user')->loadByProperties(['mail' => $githubUser->email]);
+    if (!$users || count($users) > 1) {
+      $this->logger->error('Trying to merge account by mail without drupal account');
+      return false;
+    }
+
+    $account = reset($users);
+    $this->externalAuth->linkExistingAccount($githubUser->login, 'github_auth', $account);
+    $this->tempStore->delete('githubuser');
+
+    return $this->loginOrRegister($githubUser);
+  }
+
+  public function loginOrRegister($githubUser) {
     return $this->externalAuth->loginRegister($githubUser->login, 'github_auth', [
         'name' => $githubUser->login,
         'mail' => $githubUser->email
