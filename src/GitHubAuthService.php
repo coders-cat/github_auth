@@ -184,7 +184,7 @@ class GitHubAuthService {
       }
     }
     catch (Exception $ex) {
-      watchdog_exception('github_auth', $ex, 'Error get access token: @message | Access token: @access_token', [
+      watchdog_exception('github_auth', $ex, 'Error get github user: @message | Access token: @access_token', [
         '@message' => $ex->getMessage(),
         '@access_token' => $access_token
       ]);
@@ -204,7 +204,7 @@ class GitHubAuthService {
       }
     }
     catch (Exception $ex) {
-      watchdog_exception('github_auth', $ex, 'Error get access token: @message | Access token: @access_token', [
+      watchdog_exception('github_auth', $ex, 'Error get github user emails: @message | Access token: @access_token', [
         '@message' => $ex->getMessage(),
         '@access_token' => $access_token
       ]);
