@@ -25,23 +25,12 @@ function github_auth_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_theme().
- */
-function github_auth_theme() {
-  return [
-    'github_auth' => [
-      'render element' => 'children',
-    ],
-  ];
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  */
 function github_auth_form_user_login_form_alter(&$form, FormStateInterface $form_state) {
   $form['github_auth'] = [
     '#type' => 'container',
-    '#suffix' => '<div class="github_auth__separator">' . t('Or') . '</div>',
+    '#suffix' => '<div class="github_auth__separator">' . t('Or log in with a username') . '</div>',
     '#weight' => -1,
     '#attributes' => [
       'class' => ['github_auth__link'],

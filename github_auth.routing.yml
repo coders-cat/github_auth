@@ -4,7 +4,7 @@ github_auth.oauth_settings_form:
     _form: '\Drupal\github_auth\Form\GitHubAuthSettingsForm'
     _title: 'GitHub OAuth Settings'
   requirements:
-    _permission: 'access administration pages'
+    _permission: 'administer site configuration'
   options:
     _admin_route: TRUE
 
@@ -31,5 +31,13 @@ github_auth.confirm_merge_accounts:
   defaults:
     _form: '\Drupal\github_auth\Form\MergeAccountsConfigForm'
     _title: 'Merge Accounts'
+  requirements:
+    _access: 'TRUE'
+
+github_auth.username_choose_form:
+  path: '/user/login/github_auth/username'
+  defaults:
+    _form: '\Drupal\github_auth\Form\UsernameChooseForm'
+    _title: 'Choose username'
   requirements:
     _access: 'TRUE'

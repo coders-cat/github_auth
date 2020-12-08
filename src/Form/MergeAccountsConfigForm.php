@@ -35,7 +35,11 @@ class MergeAccountsConfigForm extends ConfirmFormBase {
 
   public function buildForm(array $form, FormStateInterface $form_state) {
     if (!$this->githubUser) {
-      $form['#title'] = $this->t('There is nothing to merge.');
+      $form['title'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'h2',
+        '#value' => $this->t('There is nothing to merge.'),
+      ];
 
       $form['#attributes']['class'][] = 'confirmation';
 

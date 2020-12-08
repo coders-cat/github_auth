@@ -2,6 +2,8 @@ name: 'GitHub Auth'
 type: module
 description: 'GitHub Login Auth'
 core_version_requirement: ^8 || ^9
-package: 'Coders.cat'
+package: 'Authentication'
 dependencies:
   - externalauth
+
+version: 1.0.0

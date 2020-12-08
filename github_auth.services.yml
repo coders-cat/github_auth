@@ -4,4 +4,4 @@ services:
     arguments: ['github_auth']
   github_auth.manager:
     class: Drupal\github_auth\GitHubAuthService
-    arguments: ['@config.factory', '@logger.channel.github_auth', '@entity_type.manager', '@session_manager', '@csrf_token', '@current_user', '@tempstore.private', '@http_client', '@externalauth.externalauth']
+    arguments: ['@config.factory', '@logger.channel.github_auth', '@entity_type.manager', '@csrf_token', '@current_user', '@tempstore.private', '@http_client', '@externalauth.externalauth']

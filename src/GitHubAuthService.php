@@ -6,7 +6,6 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Session\SessionManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Url;
@@ -48,12 +47,6 @@ class GitHubAuthService {
 
   /**
    *
-   * @var SessionManagerInterface
-   */
-  protected $sessionManager;
-
-  /**
-   *
    * @var CsrfTokenGenerator
    */
   protected $csrfTokenGenerator;
@@ -92,7 +85,6 @@ class GitHubAuthService {
     ConfigFactoryInterface $config_factory,
     LoggerInterface $logger,
     EntityTypeManagerInterface $entity_type_manager,
-    SessionManagerInterface $session_manager,
     CsrfTokenGenerator $csrf_token_generator,
     AccountInterface $current_user,
     PrivateTempStoreFactory $temp_store_factory,
@@ -102,7 +94,6 @@ class GitHubAuthService {
     $this->configFactory = $config_factory;
     $this->logger = $logger;
     $this->entityTypeManager = $entity_type_manager;
-    $this->sessionManager = $session_manager;
     $this->csrfTokenGenerator = $csrf_token_generator;
     $this->currentUser = $current_user;
     $this->tempStore = $temp_store_factory->get('github_auth');
@@ -111,19 +102,15 @@ class GitHubAuthService {
   }
 
   public function getGitHubAuthorizeUrl(): Url {
-    if ($this->currentUser->isAnonymous() && !$this->sessionManager->isStarted()) {
-      // ensure session for anonymous to use csrfToken
-      $this->sessionManager->start();
-    }
-
     $config = $this->configFactory->get('github_auth.oauthsettings');
+    $redirect_uri = Url::fromRoute('github_auth.callback', [], ['absolute' => TRUE])->toString(true)->getGeneratedUrl();
 
     return Url::fromUri('https://github.com/login/oauth/authorize', [
         'absolute' => TRUE,
         'query' => [
           'client_id' => $config->get('client_id'),
           'scope' => 'user:email',
-          'redirect_uri' => Url::fromRoute('github_auth.callback', [], ['absolute' => TRUE])->toString(true)->getGeneratedUrl(),
+          'redirect_uri' => $redirect_uri,
           'state' => $this->csrfTokenGenerator->get('github_auth')
         ]
     ]);
@@ -142,8 +129,7 @@ class GitHubAuthService {
           'client_id' => $config->get('client_id'),
           'client_secret' => $config->get('client_secret'),
           'code' => $code,
-          'state' => $state,
-          'state' => $this->csrfTokenGenerator->get('github_auth')
+          'state' => $state
         ]
     ]);
 
@@ -250,14 +236,19 @@ class GitHubAuthService {
 
     $account = reset($users);
     $this->externalAuth->linkExistingAccount($githubUser->login, 'github_auth', $account);
-    $this->tempStore->delete('githubuser');
 
     return $this->loginOrRegister($githubUser);
   }
 
-  public function loginOrRegister($githubUser) {
+  public function isUsernameAvailable(string $username): bool {
+    $users = $this->entityTypeManager->getStorage('user')->loadByProperties(['name' => $username]);
+    return !$users;
+  }
+
+  public function loginOrRegister($githubUser, ?string $name = null) {
+    $this->tempStore->delete('githubuser'); // Temp data cleanup
     return $this->externalAuth->loginRegister($githubUser->login, 'github_auth', [
-        'name' => $githubUser->login,
+        'name' => $name ?? $githubUser->login,
         'mail' => $githubUser->email
     ]);
   }
