@@ -30,8 +30,7 @@ function github_auth_help($route_name, RouteMatchInterface $route_match) {
 function github_auth_form_user_login_form_alter(&$form, FormStateInterface $form_state) {
   $form['github_auth'] = [
     '#type' => 'container',
-    '#suffix' => '<div class="github_auth__separator">' . t('Or log in with a username') . '</div>',
-    '#weight' => -1,
+    '#weight' => -2,
     '#attributes' => [
       'class' => ['github_auth__link'],
     ],
@@ -39,6 +38,16 @@ function github_auth_form_user_login_form_alter(&$form, FormStateInterface $form
       '#type' => 'link',
       '#title' => t('Login with GitHub'),
       '#url' => Url::fromRoute('github_auth.authorize'),
+    ]
+  ];
+
+  $form['separator'] = [
+    '#type' => 'html_tag',
+    '#tag' => 'div',
+    '#value' => t('Or log in with a username'),
+    '#weight' => -1,
+    '#attributes' => [
+      'class' => ['github_auth__separator'],
     ]
   ];
 
