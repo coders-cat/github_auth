@@ -1,0 +1,4 @@
+github_auth:
+  css:
+    component:
+      assets/css/styles.css: {}

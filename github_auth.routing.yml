@@ -1,0 +1,43 @@
+github_auth.oauth_settings_form:
+  path: '/admin/config/github_auth/oauthsettings'
+  defaults:
+    _form: '\Drupal\github_auth\Form\GitHubAuthSettingsForm'
+    _title: 'GitHub OAuth Settings'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    _admin_route: TRUE
+
+github_auth.authorize:
+  path: '/user/login/github_auth'
+  defaults:
+    _controller: '\Drupal\github_auth\Controller\GitHubAuthController::authorize'
+    _title: 'Redirect to GitHub'
+  options:
+    no_cache: 'TRUE'
+  requirements:
+    _permission: 'access content'
+
+github_auth.callback:
+  path: '/user/login/github_auth/callback'
+  defaults:
+    _controller: '\Drupal\github_auth\Controller\GitHubAuthController::callback'
+    _title: 'GitHub return url callback'
+  requirements:
+    _permission: 'access content'
+
+github_auth.confirm_merge_accounts:
+  path: '/user/login/github_auth/merge'
+  defaults:
+    _form: '\Drupal\github_auth\Form\MergeAccountsConfigForm'
+    _title: 'Merge Accounts'
+  requirements:
+    _access: 'TRUE'
+
+github_auth.username_choose_form:
+  path: '/user/login/github_auth/username'
+  defaults:
+    _form: '\Drupal\github_auth\Form\UsernameChooseForm'
+    _title: 'Choose username'
+  requirements:
+    _access: 'TRUE'
