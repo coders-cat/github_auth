@@ -35,16 +35,14 @@ class GitHubAuthSettingsForm extends ConfigFormBase {
     $form['client_id'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Client ID'),
-      '#maxlength' => 64,
-      '#size' => 64,
+      '#required' => TRUE,
       '#default_value' => $config->get('client_id'),
     ];
 
     $form['client_secret'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Client secret'),
-      '#maxlength' => 64,
-      '#size' => 64,
+      '#required' => TRUE,
       '#default_value' => $config->get('client_secret'),
     ];
 
