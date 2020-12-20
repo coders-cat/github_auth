@@ -51,6 +51,13 @@ class MergeAccountsConfigForm extends ConfirmFormBase {
       }
       return $form;
     }
+    else {
+      $form['title'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'h2',
+        '#value' => $this->t('Merge Accounts'),
+      ];
+    }
 
     return parent::buildForm($form, $form_state);
   }
