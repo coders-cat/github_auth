@@ -1,0 +1,172 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  modules/contrib/github_auth/github_auth.module: n/a
+#  modules/contrib/github_auth/github_auth.info.yml: n/a
+#  modules/contrib/github_auth/github_auth.links.menu.yml: n/a
+#  modules/contrib/github_auth/github_auth.routing.yml: n/a
+#  modules/contrib/github_auth/src/GitHubAuthService.php: n/a
+#  modules/contrib/github_auth/src/Controller/GitHubAuthController.php: n/a
+#  modules/contrib/github_auth/src/Form/GitHubAuthSettingsForm.php: n/a
+#  modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php: n/a
+#  modules/contrib/github_auth/src/Form/UsernameChooseForm.php: n/a
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2020-12-20 09:00+0100\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: modules/contrib/github_auth/github_auth.module:19
+msgid "About"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.module:20 modules/contrib/github_auth/github_auth.info.yml:0
+msgid "GitHub Login Auth"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.module:39
+msgid "Login with GitHub"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.module:47
+msgid "Or log in with a username"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.info.yml:0
+msgid "GitHub Auth"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.info.yml:0
+msgid "Authentication"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.links.menu.yml:0
+msgid "GitHub OAuth"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.links.menu.yml:0
+msgid "GitHub OAuth settings"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.routing.yml:0
+msgid "GitHub OAuth Settings"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.routing.yml:0
+msgid "Redirect to GitHub"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.routing.yml:0
+msgid "GitHub return url callback"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.routing.yml:0
+msgid "Merge Accounts"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.routing.yml:0
+msgid "Choose username"
+msgstr ""
+
+#: modules/contrib/github_auth/src/GitHubAuthService.php:145
+msgid "getAccessToken response: @status - @phrase"
+msgstr ""
+
+#: modules/contrib/github_auth/src/GitHubAuthService.php:227
+msgid "Trying to merge account by mail without github user"
+msgstr ""
+
+#: modules/contrib/github_auth/src/GitHubAuthService.php:233
+msgid "Trying to merge account by mail without drupal account"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:119
+msgid "Login with GitHub failed."
+msgstr ""
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:61
+msgid "Invalid state token @token"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:67
+msgid "Error getting GitHub access token @code @state"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:76
+msgid "Error getting GitHub user data @access_token"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:81
+msgid "GitHub account does not have any primary verified email."
+msgstr ""
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:106
+msgid "GitHub external loginOrRegister failed for @login."
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/GitHubAuthSettingsForm.php:37
+msgid "Client ID"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/GitHubAuthSettingsForm.php:44
+msgid "Client secret"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php:41
+msgid "There is nothing to merge."
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php:70
+msgid "An account with email \"@email\" already exist. Do you want to merge accounts?"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php:76
+msgid "Merge"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php:96
+msgid "Accounts merged"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php:102
+msgid "Error merging accounts"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:46
+msgid "The username %value is already taken. Please choose another one."
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:58
+msgid "New username"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:59
+msgid "Choose another username"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:68
+msgid "Submit"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:75;95
+msgid "Missing GitHub user"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:81
+msgid "Cancel"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:100
+msgid "The username %value is already taken."
+msgstr ""
+
