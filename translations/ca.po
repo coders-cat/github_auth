@@ -1,0 +1,185 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  modules/contrib/github_auth/github_auth.module: n/a
+#  modules/contrib/github_auth/github_auth.info.yml: n/a
+#  modules/contrib/github_auth/github_auth.links.menu.yml: n/a
+#  modules/contrib/github_auth/github_auth.routing.yml: n/a
+#  modules/contrib/github_auth/src/GitHubAuthService.php: n/a
+#  modules/contrib/github_auth/src/Controller/GitHubAuthController.php: n/a
+#  modules/contrib/github_auth/src/Form/GitHubAuthSettingsForm.php: n/a
+#  modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php: n/a
+#  modules/contrib/github_auth/src/Form/UsernameChooseForm.php: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2020-12-20 09:00+0100\n"
+"PO-Revision-Date: 2020-12-20 09:18+0100\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.2.1\n"
+"Last-Translator: \n"
+"Language: ca\n"
+
+#: modules/contrib/github_auth/github_auth.module:19
+msgid "About"
+msgstr "Quant a"
+
+#: modules/contrib/github_auth/github_auth.module:20
+#: modules/contrib/github_auth/github_auth.info.yml:0
+msgid "GitHub Login Auth"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.module:39
+msgid "Login with GitHub"
+msgstr "Accedeix amb GitHub"
+
+#: modules/contrib/github_auth/github_auth.module:47
+msgid "Or log in with a username"
+msgstr "O bé accedeix amb un nom d'usuari"
+
+#: modules/contrib/github_auth/github_auth.info.yml:0
+msgid "GitHub Auth"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.info.yml:0
+msgid "Authentication"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.links.menu.yml:0
+msgid "GitHub OAuth"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.links.menu.yml:0
+msgid "GitHub OAuth settings"
+msgstr "Ajustos GitHub OAuth"
+
+#: modules/contrib/github_auth/github_auth.routing.yml:0
+msgid "GitHub OAuth Settings"
+msgstr "Ajustos GitHub OAuth"
+
+#: modules/contrib/github_auth/github_auth.routing.yml:0
+msgid "Redirect to GitHub"
+msgstr "Redirecció a GitHub"
+
+#: modules/contrib/github_auth/github_auth.routing.yml:0
+msgid "GitHub return url callback"
+msgstr ""
+
+#: modules/contrib/github_auth/github_auth.routing.yml:0
+msgid "Merge Accounts"
+msgstr "Fusionar comptes"
+
+#: modules/contrib/github_auth/github_auth.routing.yml:0
+msgid "Choose username"
+msgstr "Escull un nom d'usuari"
+
+#: modules/contrib/github_auth/src/GitHubAuthService.php:145
+msgid "getAccessToken response: @status - @phrase"
+msgstr ""
+
+#: modules/contrib/github_auth/src/GitHubAuthService.php:227
+msgid "Trying to merge account by mail without github user"
+msgstr ""
+"S'està intentant fusionar comptes per correu electrònic sense un "
+"usuari de github"
+
+#: modules/contrib/github_auth/src/GitHubAuthService.php:233
+msgid "Trying to merge account by mail without drupal account"
+msgstr ""
+"S'està intentant fusionar comptes per correu electrònic sense un "
+"compte de drupal"
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:119
+msgid "Login with GitHub failed."
+msgstr "L'accés amb GitHub ha fallat."
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:61
+msgid "Invalid state token @token"
+msgstr "Token d'estat invàlid @token"
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:67
+msgid "Error getting GitHub access token @code @state"
+msgstr "Error obtenint el token d'accés de GitHub @code @state"
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:76
+msgid "Error getting GitHub user data @access_token"
+msgstr "Error obtenint les dades de l'usuari de GitHub @access_token"
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:81
+msgid "GitHub account does not have any primary verified email."
+msgstr ""
+"Aquest compte de GitHub no disposa de cap compte de correu electrònic "
+"verificat primari."
+
+#: modules/contrib/github_auth/src/Controller/GitHubAuthController.php:106
+msgid "GitHub external loginOrRegister failed for @login."
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/GitHubAuthSettingsForm.php:37
+msgid "Client ID"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/GitHubAuthSettingsForm.php:44
+msgid "Client secret"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php:41
+msgid "There is nothing to merge."
+msgstr "No hi ha res per fusionar."
+
+#: modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php:70
+msgid ""
+"An account with email \"@email\" already exist. Do you want to merge "
+"accounts?"
+msgstr ""
+"Ja existeix un compte amb el correu electrònic \"@email\". Vols "
+"fusionar els comptes?"
+
+#: modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php:76
+msgid "Merge"
+msgstr "Fusionar"
+
+#: modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php:96
+msgid "Accounts merged"
+msgstr "Comptes fusionats"
+
+#: modules/contrib/github_auth/src/Form/MergeAccountsConfigForm.php:102
+msgid "Error merging accounts"
+msgstr "Error fusionant els comptes"
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:46
+msgid "The username %value is already taken. Please choose another one."
+msgstr ""
+"El nom d'usuari %value ja està agafat.El nom d'usuari %value ja està "
+"agafat.  Si us plau tria'n un altre."
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:58
+msgid "New username"
+msgstr "Nou nom d'usuari"
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:59
+msgid "Choose another username"
+msgstr "Tria un altre nom d'usuari"
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:68
+msgid "Submit"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:75;95
+msgid "Missing GitHub user"
+msgstr "Manca el usuari de GitHub"
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:81
+msgid "Cancel"
+msgstr ""
+
+#: modules/contrib/github_auth/src/Form/UsernameChooseForm.php:100
+msgid "The username %value is already taken."
+msgstr "El nom d'usuari %value ja està agafat."
