@@ -21,12 +21,11 @@
 }
 
 .github_auth__link a {
-  background-image: url("../images/GitHub-Mark-32px.png");
+  background-image: url("../images/GitHub-Mark-Light-32px.png");
   background-position: 7% center;
   background-repeat: no-repeat;
   border-radius: 1em;
   padding: 1em 1em 1em 3.4em;
-  background-color: #fff;
-  color: #000;
-  filter: invert();
+  background-color: #000;
+  color: #fff;
 }
