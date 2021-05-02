@@ -4,7 +4,6 @@ namespace Drupal\github_auth\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\TrustedRedirectResponse;
-use Drupal\Core\Url;
 use Drupal\github_auth\GitHubAuthService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -37,7 +36,7 @@ class GitHubAuthController extends ControllerBase {
    * @return TrustedRedirectResponse
    *   Redirect to external url.
    */
-  public function authorize(Request $request) {
+  public function authorize(Request $request): TrustedRedirectResponse {
     if ($this->currentUser()->isAnonymous()) {
       // Forcem que la sessió del anònim sigui persistent per poder validar el csrfToken al callback
       // @TODO Hi ha alguna manera més neta de fer això ???
@@ -53,7 +52,7 @@ class GitHubAuthController extends ControllerBase {
    *
    * @return RedirectResponse
    */
-  public function callback(Request $request) {
+  public function callback(Request $request): RedirectResponse {
     $code = $request->query->get('code');
     $state = $request->query->get('state');
 
@@ -89,15 +88,13 @@ class GitHubAuthController extends ControllerBase {
       $userByEmail = $userStorage->loadByProperties(['mail' => $githubUser->email]);
       if ($userByEmail) {
         $this->githubAuthManager->keepGitHubUser($githubUser);
-        $merge_confirm_url = Url::fromRoute('github_auth.confirm_merge_accounts');
-        return new RedirectResponse($merge_confirm_url->toString());
+        return $this->redirect('github_auth.confirm_merge_accounts');
       }
 
       $userByName = $userStorage->loadByProperties(['name' => $githubUser->login]);
       if ($userByName) {
         $this->githubAuthManager->keepGitHubUser($githubUser);
-        $username_choose_url = Url::fromRoute('github_auth.username_choose_form');
-        return new RedirectResponse($username_choose_url->toString());
+        return $this->redirect('github_auth.username_choose_form');
       }
     }
 
@@ -107,17 +104,13 @@ class GitHubAuthController extends ControllerBase {
       return $this->loginFailed();
     }
 
-    $profile_url = Url::fromRoute('entity.user.canonical', [
-        'user' => $account->id()
-    ]);
-
-    return new RedirectResponse($profile_url->toString());
+    return $this->redirect('entity.user.canonical', ['user' => $account->id()]);
   }
 
-  private function loginFailed() {
+  private function loginFailed(): RedirectResponse {
     // Generic message to prevent guessing
     $this->messenger()->addError($this->t('Login with GitHub failed.'));
-    return new RedirectResponse(Url::fromRoute('user.login')->toString());
+    return $this->redirect('user.login');
   }
 
 }
