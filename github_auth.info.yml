@@ -1,10 +1,10 @@
 name: 'GitHub Auth'
 type: module
 description: 'GitHub Login Auth'
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9|| ^10
 package: 'Authentication'
 configure: github_auth.oauth_settings_form
 dependencies:
   - externalauth
 
-version: 1.0.0
+version: 1.1.0

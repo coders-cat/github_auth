@@ -29,3 +29,7 @@
   background-color: #000;
   color: #fff;
 }
+
+.github_auth__link a:hover {
+  border-radius: .5em;
+}
