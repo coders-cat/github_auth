@@ -2,7 +2,7 @@
     "name": "coders-cat/github_auth",
     "type": "drupal-module",
     "description": "GitHub Login Auth",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "keywords": [
     ],
     "homepage": "https://github.com/coders-cat/github_auth",
