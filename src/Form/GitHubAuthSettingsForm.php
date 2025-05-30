@@ -4,31 +4,23 @@ namespace Drupal\github_auth\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Override;
 
-/**
- * Class GitHubAuthSettingsForm.
- */
-class GitHubAuthSettingsForm extends ConfigFormBase {
+final class GitHubAuthSettingsForm extends ConfigFormBase {
 
-  /**
-   * {@inheritdoc}
-   */
+  #[Override]
   protected function getEditableConfigNames() {
     return [
       'github_auth.oauthsettings',
     ];
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  #[Override]
   public function getFormId() {
     return 'github_oauth_settings_form';
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  #[Override]
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('github_auth.oauthsettings');
 
@@ -49,9 +41,7 @@ class GitHubAuthSettingsForm extends ConfigFormBase {
     return parent::buildForm($form, $form_state);
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  #[Override]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
@@ -60,5 +50,4 @@ class GitHubAuthSettingsForm extends ConfigFormBase {
       ->set('client_secret', $form_state->getValue('client_secret'))
       ->save();
   }
-
 }

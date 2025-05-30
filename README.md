@@ -39,14 +39,17 @@ INSTALLATION
 Add new VCS repository (https://getcomposer.org/doc/05-repositories.md#vcs)
 to your composer.json:
 
-    "repositories": [
-         {
-             "type": "vcs",
-             "url": "https://github.com/coders-cat/github_auth"
-         }
-     ],
+```
+  "repositories": [
+       {
+           "type": "vcs",
+           "url": "https://github.com/coders-cat/github_auth",
+           "only": ["coders-cat/github_auth"]
+       }
+   ],
+```
 
-Install with Composer: `$ composer require 'coders-cat/github_auth:^1.0'`
+Install with Composer: `composer require coders-cat/github_auth`
 
 
 CONFIGURATION
@@ -74,4 +77,3 @@ TODO
 * Provide some tests...
 * Add to Drupal?
 * Or... add to packagist?
-

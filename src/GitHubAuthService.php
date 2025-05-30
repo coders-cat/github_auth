@@ -5,100 +5,36 @@ namespace Drupal\github_auth;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Url;
 use Drupal\externalauth\ExternalAuthInterface;
+use Drupal\user\UserInterface;
 use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
 use Psr\Log\LoggerInterface;
+use stdClass;
 use function count;
 use function GuzzleHttp\json_decode;
 use function parse_str;
 use function reset;
 use function watchdog_exception;
 
-/**
- * Class GitHubAuthService.
- */
-class GitHubAuthService {
+final class GitHubAuthService {
 
-  /**
-   * Drupal\Core\Config\ConfigFactoryInterface definition.
-   *
-   * @var ConfigFactoryInterface
-   */
-  protected $configFactory;
+  private readonly PrivateTempStore $tempStore;
 
-  /**
-   *
-   * @var LoggerInterface
-   */
-  protected $logger;
-
-  /**
-   * Drupal\Core\Entity\EntityTypeManagerInterface definition.
-   *
-   * @var EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   *
-   * @var CsrfTokenGenerator
-   */
-  protected $csrfTokenGenerator;
-
-  /**
-   * The current user service.
-   *
-   * @var AccountInterface
-   */
-  protected $currentUser;
-
-  /**
-   *
-   * @var PrivateTempStore
-   */
-  protected $tempStore;
-
-  /**
-   * GuzzleHttp\ClientInterface definition.
-   *
-   * @var ClientInterface
-   */
-  protected $httpClient;
-
-  /**
-   * Drupal\externalauth\ExternalAuthInterface definition.
-   *
-   * @var ExternalAuthInterface
-   */
-  protected $externalAuth;
-
-  /**
-   * Constructs a new GitHubAuthService object.
-   */
   public function __construct(
-    ConfigFactoryInterface $config_factory,
-    LoggerInterface $logger,
-    EntityTypeManagerInterface $entity_type_manager,
-    CsrfTokenGenerator $csrf_token_generator,
-    AccountInterface $current_user,
-    PrivateTempStoreFactory $temp_store_factory,
-    ClientInterface $http_client,
-    ExternalAuthInterface $externalauth_externalauth
+    private readonly ConfigFactoryInterface $configFactory,
+    private readonly LoggerInterface $logger,
+    private readonly EntityTypeManagerInterface $entityTypeManager,
+    private readonly CsrfTokenGenerator $csrfTokenGenerator,
+    private readonly PrivateTempStoreFactory $tempStoreFactory,
+    private readonly ClientInterface $httpClient,
+    private readonly ExternalAuthInterface $externalAuth,
   ) {
-    $this->configFactory = $config_factory;
-    $this->logger = $logger;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->csrfTokenGenerator = $csrf_token_generator;
-    $this->currentUser = $current_user;
-    $this->tempStore = $temp_store_factory->get('github_auth');
-    $this->httpClient = $http_client;
-    $this->externalAuth = $externalauth_externalauth;
+    $this->tempStore = $this->tempStoreFactory->get('github_auth');
   }
 
   public function getGitHubAuthorizeUrl(): Url {
@@ -116,21 +52,21 @@ class GitHubAuthService {
     ]);
   }
 
-  public function verifyCsrfToken($token) {
+  public function verifyCsrfToken($token): bool {
     return $this->csrfTokenGenerator->validate($token, 'github_auth');
   }
 
-  public function getAccessToken($code, $state) {
+  public function getAccessToken($code, $state): string {
     $config = $this->configFactory->get('github_auth.oauthsettings');
 
     $url = Url::fromUri('https://github.com/login/oauth/access_token', [
-        'absolute' => TRUE,
-        'query' => [
-          'client_id' => $config->get('client_id'),
-          'client_secret' => $config->get('client_secret'),
-          'code' => $code,
-          'state' => $state
-        ]
+      'absolute' => TRUE,
+      'query' => [
+        'client_id' => $config->get('client_id'),
+        'client_secret' => $config->get('client_secret'),
+        'code' => $code,
+        'state' => $state
+      ]
     ]);
 
     try {
@@ -159,7 +95,7 @@ class GitHubAuthService {
     return '';
   }
 
-  public function getGitHubUser($access_token) {
+  public function getGitHubUser($access_token): ?stdClass {
     try {
       $response = $this->httpClient->request('GET', 'https://api.github.com/user', [
         RequestOptions::HEADERS => ['Authorization' => "token {$access_token}"]
@@ -213,15 +149,15 @@ class GitHubAuthService {
     return $githubUser;
   }
 
-  public function keepGitHubUser($githubUser) {
+  public function keepGitHubUser($githubUser): void {
     $this->tempStore->set('githubuser', $githubUser);
   }
 
-  public function getKeepedGitHubUser() {
+  public function getKeepedGitHubUser(): ?stdClass {
     return $this->tempStore->get('githubuser');
   }
 
-  public function mergeAccountsByMailAndLogin() {
+  public function mergeAccountsByMailAndLogin(): UserInterface|bool {
     $githubUser = $this->getKeepedGitHubUser();
     if (!$githubUser) {
       $this->logger->error('Trying to merge account by mail without github user');
@@ -253,8 +189,7 @@ class GitHubAuthService {
     ]);
   }
 
-  public function externalUserExist($githubUser) {
+  public function externalUserExist($githubUser): UserInterface|bool {
     return $this->externalAuth->load($githubUser->login, 'github_auth');
   }
-
 }

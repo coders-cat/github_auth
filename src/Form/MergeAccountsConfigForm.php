@@ -8,32 +8,29 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\github_auth\GitHubAuthService;
+use Override;
+use stdClass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * Class MergeAccountsConfigForm.
- */
-class MergeAccountsConfigForm extends ConfirmFormBase {
+final class MergeAccountsConfigForm extends ConfirmFormBase {
 
-  /**
-   * Drupal\github_auth\GitHubAuthService definition.
-   *
-   * @var GitHubAuthService
-   */
-  protected $githubAuthManager;
-  protected $githubUser;
+  private readonly stdClass $githubUser;
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    $instance = parent::create($container);
-    $instance->githubAuthManager = $container->get('github_auth.manager');
-    $instance->githubUser = $instance->githubAuthManager->getKeepedGitHubUser();
-    return $instance;
+  public function __construct(
+    private readonly GitHubAuthService $githubAuthManager,
+  ) {
+    $this->githubUser = $this->githubAuthManager->getKeepedGitHubUser();
   }
 
-  public function buildForm(array $form, FormStateInterface $form_state) {
+  #[Override]
+  public static function create(ContainerInterface $container): self {
+    return new static(
+      $container->get('github_auth.manager'),
+    );
+  }
+
+  #[Override]
+  public function buildForm(array $form, FormStateInterface $form_state): array {
     if (!$this->githubUser) {
       $form['title'] = [
         '#type' => 'html_tag',
@@ -62,41 +59,39 @@ class MergeAccountsConfigForm extends ConfirmFormBase {
     return parent::buildForm($form, $form_state);
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  #[Override]
   public function getFormId() {
     return 'merge_accounts_config_form';
   }
 
+  #[Override]
   public function getCancelUrl(): Url {
     return Url::fromRoute('user.login');
   }
 
+  #[Override]
   public function getQuestion(): TranslatableMarkup {
     return $this->t('An account with email "@email" already exist. Do you want to merge accounts?', [
         '@email' => $this->githubUser->email
     ]);
   }
 
+  #[Override]
   public function getConfirmText() {
     return $this->t('Merge');
   }
 
+  #[Override]
   public function getDescription() {
     return parent::getDescription();
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  #[Override]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  #[Override]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($this->githubAuthManager->mergeAccountsByMailAndLogin()) {
       $account = $this->githubAuthManager->loginOrRegister($this->githubUser);
@@ -110,5 +105,4 @@ class MergeAccountsConfigForm extends ConfirmFormBase {
       $form_state->setRedirect('user.login');
     }
   }
-
 }

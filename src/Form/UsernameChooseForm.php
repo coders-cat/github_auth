@@ -6,41 +6,33 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\github_auth\GitHubAuthService;
+use Override;
+use stdClass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * Class UsernameChooseForm.
- */
-class UsernameChooseForm extends FormBase {
+final class UsernameChooseForm extends FormBase {
 
-  /**
-   * Drupal\github_auth\GitHubAuthService definition.
-   *
-   * @var GitHubAuthService
-   */
-  protected $githubAuthManager;
-  protected $githubUser;
+  private readonly stdClass $githubUser;
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    $instance = parent::create($container);
-    $instance->githubAuthManager = $container->get('github_auth.manager');
-    $instance->githubUser = $instance->githubAuthManager->getKeepedGitHubUser();
-    return $instance;
+  public function __construct(
+    private readonly GitHubAuthService $githubAuthManager,
+  ) {
+    $this->githubUser = $this->githubAuthManager->getKeepedGitHubUser();
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  #[Override]
+  public static function create(ContainerInterface $container): self {
+    return new static(
+      $container->get('github_auth.manager'),
+    );
+  }
+
+  #[Override]
   public function getFormId() {
     return 'username_choose_form';
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  #[Override]
   public function buildForm(array $form, FormStateInterface $form_state) {
     if ($this->githubUser) {
       $title = $this->t('The username %value is already taken. Please choose another one.', [
@@ -86,9 +78,7 @@ class UsernameChooseForm extends FormBase {
     return $form;
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  #[Override]
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
     if (!$this->githubUser) {
@@ -104,14 +94,11 @@ class UsernameChooseForm extends FormBase {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
+  #[Override]
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $account = $this->githubAuthManager->loginOrRegister($this->githubUser, $form_state->getValue('new_username'));
     $form_state->setRedirect('entity.user.canonical', [
       'user' => $account->id()
     ]);
   }
-
 }

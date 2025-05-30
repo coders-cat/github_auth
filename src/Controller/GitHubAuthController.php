@@ -5,29 +5,24 @@ namespace Drupal\github_auth\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\github_auth\GitHubAuthService;
+use Override;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Class GitHubAuthController.
- */
-class GitHubAuthController extends ControllerBase {
+final class GitHubAuthController extends ControllerBase {
 
-  /**
-   * Drupal\github_auth\GitHubAuthService definition.
-   *
-   * @var GitHubAuthService
-   */
-  protected $githubAuthManager;
+  public function __construct(
+    private readonly GitHubAuthService $githubAuthManager,
+  ) {
 
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    $instance = parent::create($container);
-    $instance->githubAuthManager = $container->get('github_auth.manager');
-    return $instance;
+  }
+
+  #[Override]
+  public static function create(ContainerInterface $container): self {
+    return new self(
+      $container->get('github_auth.manager'),
+    );
   }
 
   /**
@@ -112,5 +107,4 @@ class GitHubAuthController extends ControllerBase {
     $this->messenger()->addError($this->t('Login with GitHub failed.'));
     return $this->redirect('user.login');
   }
-
 }
